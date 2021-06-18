@@ -9,9 +9,10 @@ from typing import Any, Iterable
 from aiochannel import Channel
 from aiomisc import threaded_iterable_separate
 from aiomisc.service.periodic import PeriodicService
+from prometheus_client import Counter, Summary
 
 from cgroups_exporter.metrics import metrics_handler, CGroupTask
-
+from cgroups_exporter.metrics.blkio import uptade_device_ids
 
 log = logging.getLogger(__name__)
 
@@ -32,6 +33,22 @@ class Collector(PeriodicService):
         r"^(?P<base>.*)/(?P<group>{0})/(?P<path>.*)/?$".format(
             "|".join(groups)
         )
+    )
+
+    RUN_COUNTER = Counter(
+        "calls",
+        documentation="Exporter collector run counter",
+        namespace="cgroups",
+        subsystem="exporter",
+        unit="collector",
+    )
+
+    COLLECT_TIME = Summary(
+        "collect_time",
+        documentation="Exporter collector execution time",
+        namespace="cgroups",
+        subsystem="exporter",
+        unit="collector",
     )
 
     @threaded_iterable_separate(max_size=1024)
@@ -63,16 +80,26 @@ class Collector(PeriodicService):
         channel.close()
 
     async def worker(self, channel):
-        async for path in channel:
-            await metrics_handler(path)
+        async for task in channel:
+            try:
+                await metrics_handler(task)
+            except Exception:
+                log.exception("Failed to handle metric %r", task)
 
     async def callback(self) -> Any:
         log.debug("Starting to collect metrics")
 
-        channel = Channel(maxsize=self.max_workers * 2)
-        tasks = [self.producer(channel)]
+        with self.COLLECT_TIME.time():
+            channel = Channel(maxsize=self.max_workers * 2)
+            tasks = [self.producer(channel)]
 
-        for _ in range(self.max_workers):
-            tasks.append(self.worker(channel))
+            for _ in range(self.max_workers):
+                tasks.append(self.worker(channel))
 
-        await asyncio.gather(*tasks)
+            await self.before_collect()
+            await asyncio.gather(*tasks)
+
+        self.RUN_COUNTER.inc()
+
+    async def before_collect(self):
+        await uptade_device_ids()

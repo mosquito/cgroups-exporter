@@ -1,0 +1,122 @@
+import logging
+
+from .base import CGroupTask, MetricProviderBase, gauge_factory, UsageBase, \
+    LimitBase
+
+log = logging.getLogger()
+
+
+def memory_collector(task: CGroupTask):
+    for collector in COLLECTORS:
+        try:
+            collector(task)()
+        except Exception:
+            log.exception("Failed to collect %r", collector)
+
+
+class MemoryKernelMaxUsage(UsageBase):
+    FILENAME = "memory.kmem.max_usage_in_bytes"
+    METRIC = "kmem_max"
+    DOCUMENTATION = "Maximum kernel memory usage"
+
+
+class MemoryKernelTCPUsage(UsageBase):
+    FILENAME = "memory.kmem.tcp.usage_in_bytes"
+    METRIC = "kmem_tcp"
+    DOCUMENTATION = "Kernel TCP memory usage"
+
+
+class MemoryKernelTCPMaxUsage(UsageBase):
+    FILENAME = "memory.kmem.usage_in_bytes"
+    METRIC = "kmem"
+    DOCUMENTATION = "Maximum kernel TCP maximum memory usage"
+
+
+class MemoryMaxUsage(UsageBase):
+    FILENAME = "memory.max_usage_in_bytes"
+    METRIC = "max"
+    DOCUMENTATION = "Maximum memory usage"
+
+
+class MemorySwapMaxUsage(UsageBase):
+    FILENAME = "memory.memsw.max_usage_in_bytes"
+    METRIC = "swap_max"
+    DOCUMENTATION = "Maximum swap usage"
+
+
+class MemorySwapUsage(UsageBase):
+    FILENAME = "memory.memsw.usage_in_bytes"
+    METRIC = "swap"
+    DOCUMENTATION = "Swap usage"
+
+
+class MemoryUsage(UsageBase):
+    FILENAME = "memory.usage_in_bytes"
+    METRIC = None
+    DOCUMENTATION = "Memory usage"
+
+
+class MemoryKernelLimit(LimitBase):
+    FILENAME = "memory.kmem.limit_in_bytes"
+    METRIC = "kmem"
+    DOCUMENTATION = "Memory kernel limit"
+
+
+class MemoryKernelTCPLimit(LimitBase):
+    FILENAME = "memory.kmem.tcp.limit_in_bytes"
+    METRIC = "kmem_tcp"
+    DOCUMENTATION = "Kernel TCP memory limit"
+
+
+class MemoryLimit(LimitBase):
+    FILENAME = "memory.limit_in_bytes"
+    METRIC = None
+    DOCUMENTATION = "Memory limit"
+
+
+class MemorySwapLimit(LimitBase):
+    FILENAME = "memory.memsw.limit_in_bytes"
+    METRIC = "swap"
+    DOCUMENTATION = "Swap limit"
+
+
+class MemorySoftLimit(LimitBase):
+    FILENAME = "memory.soft_limit_in_bytes"
+    METRIC = "soft"
+    DOCUMENTATION = "Soft limit"
+
+
+class MemoryStatProvider(MetricProviderBase):
+    def __call__(self):
+        stat = self.task.abspath / "memory.stat"
+        if not stat.exists():
+            return
+
+        with open(stat, "r") as fp:
+            for line in fp:
+                param, value = line.strip().split(" ", 1)
+                metric = gauge_factory(
+                    "stat", param, self.task.group, "memory statistic",
+                    labelnames=("base_path", "path"),
+                )
+
+                metric.labels(base_path=self.base_path, path=self.path).set(
+                    int(value)
+                )
+
+
+COLLECTORS = (
+    MemoryKernelMaxUsage,
+    MemoryKernelTCPUsage,
+    MemoryKernelTCPMaxUsage,
+    MemoryMaxUsage,
+    MemorySwapMaxUsage,
+    MemorySwapUsage,
+    MemoryUsage,
+    MemoryKernelLimit,
+    MemoryKernelTCPLimit,
+    MemoryLimit,
+    MemorySwapLimit,
+    MemorySoftLimit,
+    MemoryStatProvider,
+)
