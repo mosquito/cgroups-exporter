@@ -1,9 +1,8 @@
-from setuptools import setup
-
+from setuptools import setup, find_packages
 
 setup(
     name="cgroups-exporter",
-    version="0.1.1",
+    version="0.1.2",
     include_package_data=True,
     license="Apache Software License",
     long_description=open("README.md").read(),
@@ -16,7 +15,7 @@ setup(
         "Tracker": "https://github.com/mosquito/cgroups-exporter/issues",
         "Say Thanks!": "https://saythanks.io/to/me%40mosquito.su",
     },
-    packages=["."],
+    packages=find_packages(exclude=["tests"]),
     classifiers=[
         "License :: OSI Approved :: Apache Software License",
         "Topic :: Software Development",
