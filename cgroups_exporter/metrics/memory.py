@@ -1,7 +1,9 @@
 import logging
 
-from .base import CGroupTask, MetricProviderBase, gauge_factory, UsageBase, \
-    LimitBase
+from .base import (
+    CGroupTask, MetricProviderBase, gauge_factory, UsageBase,
+    LimitBase, StatBase
+)
 
 log = logging.getLogger()
 
@@ -86,23 +88,9 @@ class MemorySoftLimit(LimitBase):
     DOCUMENTATION = "Soft limit"
 
 
-class MemoryStatProvider(MetricProviderBase):
-    def __call__(self):
-        stat = self.task.abspath / "memory.stat"
-        if not stat.exists():
-            return
-
-        with open(stat, "r") as fp:
-            for line in fp:
-                param, value = line.strip().split(" ", 1)
-                metric = gauge_factory(
-                    "stat", param, self.task.group, "memory statistic",
-                    labelnames=("base_path", "path"),
-                )
-
-                metric.labels(base_path=self.base_path, path=self.path).set(
-                    int(value)
-                )
+class MemoryStatProvider(StatBase):
+    STAT_FILE = "memory.stat"
+    DOCUMENTATION = "memory statistic"
 
 
 COLLECTORS = (

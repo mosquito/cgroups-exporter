@@ -60,3 +60,26 @@ class UsageBase(IntProviderBase):
 
 class LimitBase(IntProviderBase):
     NAME = "limit"
+
+
+class StatBase(MetricProviderBase):
+    STAT_FILE: str
+    DOCUMENTATION: str
+
+    def __call__(self):
+        stat = self.task.abspath / self.STAT_FILE
+        if not stat.exists():
+            return
+
+        with open(stat, "r") as fp:
+            for line in fp:
+                param, value = line.strip().split(" ", 1)
+                metric = gauge_factory(
+                    "stat", param, self.task.group.replace(",", "_"),
+                    self.DOCUMENTATION,
+                    labelnames=("base_path", "path"),
+                )
+
+                metric.labels(base_path=self.base_path, path=self.path).set(
+                    int(value)
+                )

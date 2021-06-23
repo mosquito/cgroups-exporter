@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="cgroups-exporter",
-    version="0.2.0",
+    version="0.2.1",
     include_package_data=True,
     license="Apache Software License",
     long_description=open("README.md").read(),
