@@ -22,15 +22,14 @@ def main():
 
     services = [
         MetricsAPI(
-            address=arguments.metrics_address,
-            port=arguments.metrics_port
+            address=arguments.metrics_address, port=arguments.metrics_port
         ),
         Collector(
             interval=arguments.collector_interval,
             delay=arguments.collector_delay,
             cgroup_paths=arguments.cgroups_path,
             max_workers=arguments.collector_workers,
-        )
+        ),
     ]
 
     if arguments.profiler:

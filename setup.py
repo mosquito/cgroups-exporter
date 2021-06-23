@@ -6,7 +6,7 @@ setup(
     include_package_data=True,
     license="Apache Software License",
     long_description=open("README.md").read(),
-    long_description_content_type='text/markdown',
+    long_description_content_type="text/markdown",
     author="Dmitry Orlov",
     author_email="me@mosquito.su",
     url="https://github.com/mosquito/cgroups-exporter",
@@ -47,11 +47,9 @@ setup(
         "multidict~=5.1",
         "prometheus-client~=0.10",
         "typing-extensions==3.10.0.0",
-        "yarl~=1.6"
+        "yarl~=1.6",
     ],
     entry_points={
-        "console_scripts": [
-            "cgroups-exporter = cgroups_exporter.__main__:main"
-        ]
+        "console_scripts": ["cgroups-exporter = cgroups_exporter.__main__:main"]
     },
 )

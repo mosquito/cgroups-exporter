@@ -8,19 +8,29 @@ class MetricsAPI(AIOHTTPService):
     @staticmethod
     def sample_line(line):
         if line.labels:
-            labelstr = '{{{0}}}'.format(','.join(
-                ['{0}="{1}"'.format(
-                    k, v.replace('\\', r'\\').replace('\n', r'\n').replace('"', r'\"'))
-                    for k, v in sorted(line.labels.items())]))
+            labelstr = "{{{0}}}".format(
+                ",".join(
+                    [
+                        '{0}="{1}"'.format(
+                            k,
+                            v.replace("\\", r"\\")
+                            .replace("\n", r"\n")
+                            .replace('"', r"\""),
+                        )
+                        for k, v in sorted(line.labels.items())
+                    ]
+                )
+            )
         else:
-            labelstr = ''
+            labelstr = ""
 
-        timestamp = ''
+        timestamp = ""
         if line.timestamp is not None:
             # Convert to milliseconds.
-            timestamp = ' {0:d}'.format(int(float(line.timestamp) * 1000))
-        return '{0}{1} {2}{3}\n'.format(
-            line.name, labelstr, floatToGoString(line.value), timestamp)
+            timestamp = " {0:d}".format(int(float(line.timestamp) * 1000))
+        return "{0}{1} {2}{3}\n".format(
+            line.name, labelstr, floatToGoString(line.value), timestamp
+        )
 
     _TYPE_MAPPER = {
         "counter": lambda typ, name: (typ, "{}_total".format(name)),
@@ -32,24 +42,20 @@ class MetricsAPI(AIOHTTPService):
 
     @staticmethod
     def format_help(mname, metric: Metric):
-        return '# HELP {0} {1}\n'.format(
+        return "# HELP {0} {1}\n".format(
             mname,
-            metric.documentation.replace(
-                '\\', r'\\'
-            ).replace(
-                '\n', r'\n'
-            )
+            metric.documentation.replace("\\", r"\\").replace("\n", r"\n"),
         )
 
     @staticmethod
     def format_type(mname, mtype):
-        return '# TYPE {0} {1}\n'.format(mname, mtype)
+        return "# TYPE {0} {1}\n".format(mname, mtype)
 
     def format_samples(self, metric: Metric):
         om_samples = {}
 
         for s in metric.samples:
-            for suffix in ['_created', '_gsum', '_gcount']:
+            for suffix in ["_created", "_gsum", "_gcount"]:
                 if s.name == metric.name + suffix:
                     # OpenMetrics specific sample, put in a gauge at the end.
                     om_samples.setdefault(suffix, []).append(
@@ -60,11 +66,12 @@ class MetricsAPI(AIOHTTPService):
                 yield self.sample_line(s)
 
         for suffix, lines in sorted(om_samples.items()):
-            yield '# HELP {0}{1} {2}\n'.format(
-                metric.name, suffix,
-                metric.documentation.replace('\\', r'\\').replace('\n', r'\n')
+            yield "# HELP {0}{1} {2}\n".format(
+                metric.name,
+                suffix,
+                metric.documentation.replace("\\", r"\\").replace("\n", r"\n"),
             )
-            yield '# TYPE {0}{1} gauge\n'.format(metric.name, suffix)
+            yield "# TYPE {0}{1} gauge\n".format(metric.name, suffix)
             yield from iter(lines)
 
     def send_metric(self, metric: Metric):
@@ -88,7 +95,7 @@ class MetricsAPI(AIOHTTPService):
                 for line in self.send_metric(metric):
                     await response.write(line.encode())
             except Exception as exception:
-                exception.args = (exception.args or ('',)) + (metric,)
+                exception.args = (exception.args or ("",)) + (metric,)
                 raise
 
         await response.write_eof()

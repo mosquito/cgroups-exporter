@@ -38,7 +38,10 @@ class IntProviderBase(MetricProviderBase):
             value = int(fp.read())
 
         metric = gauge_factory(
-            self.NAME, self.METRIC, self.task.group, self.DOCUMENTATION,
+            self.NAME,
+            self.METRIC,
+            self.task.group,
+            self.DOCUMENTATION,
             labelnames=("base_path", "path"),
         )
         metric.labels(base_path=self.base_path, path=self.path).set(value)
@@ -49,8 +52,12 @@ def gauge_factory(
     name: str, unit: str, group, documentation: str, labelnames=()
 ) -> Gauge:
     return Gauge(
-        name=name, documentation=documentation, labelnames=labelnames,
-        namespace="cgroups", subsystem=group, unit=unit
+        name=name,
+        documentation=documentation,
+        labelnames=labelnames,
+        namespace="cgroups",
+        subsystem=group,
+        unit=unit,
     )
 
 
@@ -75,7 +82,9 @@ class StatBase(MetricProviderBase):
             for line in fp:
                 param, value = line.strip().split(" ", 1)
                 metric = gauge_factory(
-                    "stat", param, self.task.group.replace(",", "_"),
+                    "stat",
+                    param,
+                    self.task.group.replace(",", "_"),
                     self.DOCUMENTATION,
                     labelnames=("base_path", "path"),
                 )

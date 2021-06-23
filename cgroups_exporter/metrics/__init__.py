@@ -10,11 +10,13 @@ from .cpu import cpu_collector
 
 log = logging.getLogger(__name__)
 
-HANDLER_REGISTRY = MappingProxyType({
-    "memory": memory_collector,
-    "blkio": blkio_collector,
-    "cpu,cpuacct": cpu_collector,
-})
+HANDLER_REGISTRY = MappingProxyType(
+    {
+        "memory": memory_collector,
+        "blkio": blkio_collector,
+        "cpu,cpuacct": cpu_collector,
+    }
+)
 
 
 @threaded

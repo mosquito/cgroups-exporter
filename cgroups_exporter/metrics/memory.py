@@ -1,8 +1,12 @@
 import logging
 
 from .base import (
-    CGroupTask, MetricProviderBase, gauge_factory, UsageBase,
-    LimitBase, StatBase
+    CGroupTask,
+    MetricProviderBase,
+    gauge_factory,
+    UsageBase,
+    LimitBase,
+    StatBase,
 )
 
 log = logging.getLogger()

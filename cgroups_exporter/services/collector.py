@@ -12,7 +12,9 @@ from aiomisc.service.periodic import PeriodicService
 from prometheus_client import Counter, Summary
 
 from cgroups_exporter.metrics import (
-    metrics_handler, CGroupTask, HANDLER_REGISTRY
+    metrics_handler,
+    CGroupTask,
+    HANDLER_REGISTRY,
 )
 from cgroups_exporter.metrics.blkio import uptade_device_ids
 
@@ -20,7 +22,7 @@ log = logging.getLogger(__name__)
 
 
 class Collector(PeriodicService):
-    __required__ = ('cgroup_paths',)
+    __required__ = ("cgroup_paths",)
 
     cgroup_paths: Iterable[str]
     max_workers: int = 8
@@ -28,9 +30,7 @@ class Collector(PeriodicService):
     groups = tuple(HANDLER_REGISTRY.keys())
 
     SPLIT_EXP = re.compile(
-        r"^(?P<base>.*)/(?P<group>{0})/(?P<path>.*)/?$".format(
-            "|".join(groups)
-        )
+        r"^(?P<base>.*)/(?P<group>{0})/(?P<path>.*)/?$".format("|".join(groups))
     )
 
     RUN_COUNTER = Counter(
@@ -68,9 +68,9 @@ class Collector(PeriodicService):
                 log.debug("Parsed %r", data)
                 yield CGroupTask(
                     abspath=Path(path),
-                    base=Path(data['base']),
-                    group=data['group'],
-                    path=Path(data['path']),
+                    base=Path(data["base"]),
+                    group=data["group"],
+                    path=Path(data["path"]),
                 )
 
     async def producer(self, channel: Channel):

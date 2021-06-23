@@ -65,10 +65,11 @@ class BlockIOBase(MetricProviderBase, ABC):
                 metric_name = metric_name.lower()
 
                 metric = gauge_factory(
-                    self.NAME, metric_name, self.task.group,
-                    self.DOCUMENTATION, labelnames=(
-                        "base_path", "path", "device"
-                    ),
+                    self.NAME,
+                    metric_name,
+                    self.task.group,
+                    self.DOCUMENTATION,
+                    labelnames=("base_path", "path", "device"),
                 )
 
                 metric.labels(
