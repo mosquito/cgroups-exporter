@@ -11,7 +11,9 @@ from aiomisc import threaded_iterable_separate
 from aiomisc.service.periodic import PeriodicService
 from prometheus_client import Counter, Summary
 
-from cgroups_exporter.metrics import metrics_handler, CGroupTask
+from cgroups_exporter.metrics import (
+    metrics_handler, CGroupTask, HANDLER_REGISTRY
+)
 from cgroups_exporter.metrics.blkio import uptade_device_ids
 
 log = logging.getLogger(__name__)
@@ -23,11 +25,7 @@ class Collector(PeriodicService):
     cgroup_paths: Iterable[str]
     max_workers: int = 8
 
-    groups = (
-        "blkio", "cpu,cpuacct", "cpuset", "devices",
-        "freezer", "hugetlb", "memory", "net_cls,net_prio",
-        "perf_event", "pids", "rdma", "systemd", "unified"
-    )
+    groups = tuple(HANDLER_REGISTRY.keys())
 
     SPLIT_EXP = re.compile(
         r"^(?P<base>.*)/(?P<group>{0})/(?P<path>.*)/?$".format(
@@ -54,25 +52,26 @@ class Collector(PeriodicService):
     @threaded_iterable_separate(max_size=1024)
     def resolve_paths(self):
         for path_glob in self.cgroup_paths:
-            for base_path in glob.glob(path_glob, recursive=True):
-                for path in glob.glob(os.path.join(base_path, "**/")):
-                    if not os.path.isdir(path):
-                        log.debug("Is not directory path %r skipping...", path)
-                        continue
+            for path in glob.glob(path_glob, recursive=True):
+                log.debug("Processing path %s", path)
 
-                    match = self.SPLIT_EXP.match(path)
+                if not os.path.isdir(path):
+                    log.debug("Is not directory path %r skipping...", path)
+                    continue
 
-                    if match is None:
-                        continue
+                match = self.SPLIT_EXP.match(path)
 
-                    data = match.groupdict()
-                    log.debug("Parsed %r", data)
-                    yield CGroupTask(
-                        abspath=Path(path),
-                        base=Path(data['base']),
-                        group=data['group'],
-                        path=Path(data['path']),
-                    )
+                if match is None:
+                    continue
+
+                data = match.groupdict()
+                log.debug("Parsed %r", data)
+                yield CGroupTask(
+                    abspath=Path(path),
+                    base=Path(data['base']),
+                    group=data['group'],
+                    path=Path(data['path']),
+                )
 
     async def producer(self, channel: Channel):
         async for path in self.resolve_paths():
