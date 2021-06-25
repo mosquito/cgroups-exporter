@@ -7,6 +7,7 @@ from .base import CGroupTask
 from .memory import memory_collector
 from .blkio import blkio_collector
 from .cpu import cpu_collector
+from .unified import unified_collector
 
 log = logging.getLogger(__name__)
 
@@ -15,6 +16,7 @@ HANDLER_REGISTRY = MappingProxyType(
         "memory": memory_collector,
         "blkio": blkio_collector,
         "cpu,cpuacct": cpu_collector,
+        "unified": unified_collector,
     }
 )
 

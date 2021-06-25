@@ -40,7 +40,7 @@ class IntProviderBase(MetricProviderBase):
         metric = gauge_factory(
             self.NAME,
             self.METRIC,
-            self.task.group,
+            self.task.group.replace(",", "_"),
             self.DOCUMENTATION,
             labelnames=("base_path", "path"),
         )
@@ -92,3 +92,39 @@ class StatBase(MetricProviderBase):
                 metric.labels(base_path=self.base_path, path=self.path).set(
                     int(value)
                 )
+
+
+class PressureBase(MetricProviderBase):
+    PRESSURE_FILE: str
+    DOCUMENTATION: str
+
+    def __call__(self):
+        stat = self.task.abspath / self.PRESSURE_FILE
+        if not stat.exists():
+            return
+
+        with open(stat, "r") as fp:
+            for line in fp:
+                kind, metric = line.split(" ", 1)
+                metrics = {}
+
+                for part in metric.split(" "):
+                    key, value = part.split("=")
+                    metrics[key] = float(value) if "." in value else int(value)
+
+                for key, value in metrics.items():
+
+                    metric = gauge_factory(
+                        kind,
+                        key,
+                        self.PRESSURE_FILE.replace(".", "_"),
+                        self.DOCUMENTATION,
+                        labelnames=("base_path", "path"),
+                    )
+
+                    metric.labels(
+                        base_path=self.base_path,
+                        path=self.path
+                    ).set(
+                        value
+                    )

@@ -1,6 +1,6 @@
 import logging
 
-from .base import CGroupTask, StatBase, gauge_factory
+from .base import CGroupTask, StatBase, IntProviderBase
 
 log = logging.getLogger()
 
@@ -23,4 +23,31 @@ class CPUStat(StatBase):
     DOCUMENTATION = "CPU statistic"
 
 
-COLLECTORS = (CPUStat, CPUAcctStat)
+class CPUCFSPeriods(IntProviderBase):
+    FILENAME = "cpu.cfs_period_us"
+    NAME = "cfs"
+    METRIC = "period_us"
+    DOCUMENTATION = "Allowed CPU periods in microseconds"
+
+
+class CPUCFSQuota(IntProviderBase):
+    FILENAME = "cpu.cfs_quota_us"
+    NAME = "cfs"
+    METRIC = "quota_us"
+    DOCUMENTATION = "Allowed CPU quota in microseconds"
+
+
+class CPUShares(IntProviderBase):
+    FILENAME = "cpu.shares"
+    NAME = "shares"
+    METRIC = None
+    DOCUMENTATION = "Allowed CPU shares"
+
+
+COLLECTORS = (
+    CPUStat,
+    CPUAcctStat,
+    CPUCFSPeriods,
+    CPUCFSQuota,
+    CPUShares,
+)
