@@ -1,6 +1,7 @@
 import logging
 
 from .base import CGroupTask, PressureBase
+from .cpu import CPUStat
 
 log = logging.getLogger()
 
@@ -32,4 +33,5 @@ COLLECTORS = (
     UnifiedCPUPressure,
     UnifiedIOPressure,
     UnifiedMemoryPressure,
+    CPUStat,
 )
