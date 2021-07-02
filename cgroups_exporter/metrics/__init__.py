@@ -8,6 +8,7 @@ from .memory import memory_collector
 from .blkio import blkio_collector
 from .cpu import cpu_collector
 from .unified import unified_collector
+from .pids import pids_collector
 
 log = logging.getLogger(__name__)
 
@@ -17,6 +18,7 @@ HANDLER_REGISTRY = MappingProxyType(
         "blkio": blkio_collector,
         "cpu,cpuacct": cpu_collector,
         "unified": unified_collector,
+        "pids": pids_collector,
     }
 )
 
