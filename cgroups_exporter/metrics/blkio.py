@@ -1,6 +1,5 @@
 import logging
 from abc import ABC
-from contextvars import ContextVar
 from glob import glob
 from pathlib import Path
 from types import MappingProxyType
@@ -68,7 +67,9 @@ class BlockIOBase(MetricProviderBase, ABC):
                     self.NAME,
                     metric_name,
                     self.task.group,
-                    self.DOCUMENTATION,
+                    self.DOCUMENTATION + " ({!r} field from {!r} file)".format(
+                        metric_name, self.FILENAME
+                    ),
                     labelnames=("base_path", "path", "device"),
                 )
 
