@@ -85,7 +85,9 @@ class StatBase(MetricProviderBase):
                     "stat",
                     param,
                     self.task.group.replace(",", "_"),
-                    self.DOCUMENTATION,
+                    self.DOCUMENTATION + " ({!r} field from {!r} file)".format(
+                        param, self.STAT_FILE
+                    ),
                     labelnames=("base_path", "path"),
                 )
 
@@ -113,12 +115,19 @@ class PressureBase(MetricProviderBase):
                     metrics[key] = float(value) if "." in value else int(value)
 
                 for key, value in metrics.items():
+                    doc_suffix = ""
+                    if "avg" in key:
+                        doc_suffix = ". Average by {} seconds".format(
+                            key.split("avg", 1)[-1]
+                        )
+                    if "total" in key:
+                        doc_suffix = " total"
 
                     metric = gauge_factory(
                         kind,
                         key,
                         self.PRESSURE_FILE.replace(".", "_"),
-                        self.DOCUMENTATION,
+                        self.DOCUMENTATION + doc_suffix,
                         labelnames=("base_path", "path"),
                     )
 
