@@ -47,7 +47,7 @@ class IntProviderBase(MetricProviderBase):
         metric.labels(base_path=self.base_path, path=self.path).set(value)
 
 
-@lru_cache
+@lru_cache(2 ** 20)
 def gauge_factory(
     name: str, unit: str, group, documentation: str, labelnames=()
 ) -> Gauge:
