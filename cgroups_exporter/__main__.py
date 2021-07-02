@@ -22,7 +22,8 @@ def main():
 
     services = [
         MetricsAPI(
-            address=arguments.metrics_address, port=arguments.metrics_port
+            address=arguments.metrics_address, port=arguments.metrics_port,
+            compression=not arguments.metrics_disable_compression
         ),
         Collector(
             interval=arguments.collector_interval,

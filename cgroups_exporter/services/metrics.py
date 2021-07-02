@@ -5,6 +5,8 @@ from prometheus_client.utils import floatToGoString
 
 
 class MetricsAPI(AIOHTTPService):
+    compression: bool = False
+
     @staticmethod
     def sample_line(line):
         if line.labels:
@@ -86,6 +88,9 @@ class MetricsAPI(AIOHTTPService):
         response = StreamResponse()
         response.content_type = CONTENT_TYPE_LATEST
         response.enable_chunked_encoding()
+
+        if self.compression:
+            response.enable_compression()
 
         await response.prepare(request)
 

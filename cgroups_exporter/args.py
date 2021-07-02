@@ -37,6 +37,7 @@ group.add_argument("--log-format", default="color", choices=LogFormat.choices())
 group = parser.add_argument_group("Metrics API options")
 group.add_argument("--metrics-address", default="::")
 group.add_argument("--metrics-port", type=int, default=9735)
+group.add_argument("--metrics-disable-compression", action="store_true")
 
 group = parser.add_argument_group("Cgroups options")
 group.add_argument("--cgroups-path", nargs="+", required=True)
