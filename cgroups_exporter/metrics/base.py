@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import NamedTuple
 
 from prometheus_client import Gauge
+from prometheus_client.utils import INF
 
 
 class CGroupTask(NamedTuple):
@@ -27,6 +28,13 @@ class IntProviderBase(MetricProviderBase):
     NAME: str
     METRIC: str
     DOCUMENTATION: str
+    MAX_VALUE: str = "max"
+
+    def check_inf(self, value):
+        if value == self.MAX_VALUE:
+            return INF
+
+        return int(value)
 
     def __call__(self):
         fpath = self.task.abspath / self.FILENAME
@@ -35,7 +43,7 @@ class IntProviderBase(MetricProviderBase):
             return
 
         with open(fpath, "r") as fp:
-            value = int(fp.read())
+            value = self.check_inf(fp.read().strip())
 
         metric = gauge_factory(
             self.NAME,

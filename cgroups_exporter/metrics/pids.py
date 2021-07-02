@@ -20,6 +20,14 @@ class PIDCount(IntProviderBase):
     METRIC = None
 
 
+class PIDMax(IntProviderBase):
+    FILENAME = "pids.max"
+    DOCUMENTATION = "Maximum Process IDs allowed for this namespace"
+    NAME = "max"
+    METRIC = None
+
+
 COLLECTORS = (
     PIDCount,
+    PIDMax,
 )

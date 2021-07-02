@@ -223,6 +223,8 @@ Metrics
 | `cgroups_memory_usage_swap` | Swap usage |
 | `cgroups_memory_usage` | Memory usage |
 | `cgroups_pids_count` | Process IDs count for this namespace |
+| `cgroups_pids_max` | Maximum Process IDs allowed for this namespace |
 | `cgroups_unified_stat_system_usec` | CPU statistic ('system_usec' field from 'cpu.stat' file) |
 | `cgroups_unified_stat_usage_usec` | CPU statistic ('usage_usec' field from 'cpu.stat' file) |
 | `cgroups_unified_stat_user_usec` | CPU statistic ('user_usec' field from 'cpu.stat' file) |
+| `cgroups_unified_uptime` | init.scope uptime |
