@@ -38,7 +38,7 @@ setup(
         "ConfigArgParse~=1.4",
         "aiochannel~=1.0",
         "aiohttp~=3.7",
-        "aiomisc~=14.1",
+        "aiomisc~=15.1",
         "async-timeout~=3.0",
         "attrs~=21.2",
         "chardet~=4.0",

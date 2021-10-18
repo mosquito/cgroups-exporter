@@ -4,12 +4,13 @@ from types import MappingProxyType
 from aiomisc import threaded
 
 from .base import CGroupTask
-from .memory import memory_collector
 from .blkio import blkio_collector
 from .cpu import cpu_collector
-from .unified import unified_collector
 from .cpuset import cpuset_collector
+from .memory import memory_collector
 from .pids import pids_collector
+from .unified import unified_collector
+
 
 log = logging.getLogger(__name__)
 
@@ -21,7 +22,7 @@ HANDLER_REGISTRY = MappingProxyType(
         "unified": unified_collector,
         "cpuset": cpuset_collector,
         "pids": pids_collector,
-    }
+    },
 )
 
 

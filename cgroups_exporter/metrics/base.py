@@ -57,7 +57,7 @@ class IntProviderBase(MetricProviderBase):
 
 @lru_cache(2 ** 20)
 def gauge_factory(
-    name: str, unit: str, group, documentation: str, labelnames=()
+    name: str, unit: str, group, documentation: str, labelnames=(),
 ) -> Gauge:
     return Gauge(
         name=name,
@@ -94,13 +94,13 @@ class StatBase(MetricProviderBase):
                     param,
                     self.task.group.replace(",", "_"),
                     self.DOCUMENTATION + " ({!r} field from {!r} file)".format(
-                        param, self.STAT_FILE
+                        param, self.STAT_FILE,
                     ),
                     labelnames=("base_path", "path"),
                 )
 
                 metric.labels(base_path=self.base_path, path=self.path).set(
-                    int(value)
+                    int(value),
                 )
 
 
@@ -126,7 +126,7 @@ class PressureBase(MetricProviderBase):
                     doc_suffix = ""
                     if "avg" in key:
                         doc_suffix = ". Average by {} seconds".format(
-                            key.split("avg", 1)[-1]
+                            key.split("avg", 1)[-1],
                         )
                     if "total" in key:
                         doc_suffix = " total"
@@ -141,7 +141,7 @@ class PressureBase(MetricProviderBase):
 
                     metric.labels(
                         base_path=self.base_path,
-                        path=self.path
+                        path=self.path,
                     ).set(
-                        value
+                        value,
                     )

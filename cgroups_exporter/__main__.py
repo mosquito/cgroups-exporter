@@ -3,7 +3,8 @@ import os
 
 from aiomisc import entrypoint
 from aiomisc.log import basic_config
-from aiomisc.service import Profiler, MemoryTracer
+from aiomisc.service import MemoryTracer, Profiler
+from aiomisc.service.sdwatchdog import SDWatchdogService
 
 from cgroups_exporter.args import parser
 from cgroups_exporter.services.collector import Collector
@@ -23,7 +24,7 @@ def main():
     services = [
         MetricsAPI(
             address=arguments.metrics_address, port=arguments.metrics_port,
-            compression=not arguments.metrics_disable_compression
+            compression=not arguments.metrics_disable_compression,
         ),
         Collector(
             interval=arguments.collector_interval,
@@ -31,6 +32,7 @@ def main():
             cgroup_paths=arguments.cgroups_path,
             max_workers=arguments.collector_workers,
         ),
+        SDWatchdogService(),
     ]
 
     if arguments.profiler:

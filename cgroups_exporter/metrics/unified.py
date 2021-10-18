@@ -2,8 +2,9 @@ import logging
 import time
 from pathlib import Path
 
-from .base import CGroupTask, PressureBase, MetricProviderBase, gauge_factory
+from .base import CGroupTask, MetricProviderBase, PressureBase, gauge_factory
 from .cpu import CPUStat
+
 
 log = logging.getLogger()
 
@@ -55,7 +56,7 @@ class Uptime(MetricProviderBase):
             labelnames=("base_path", "path"),
         )
         metric.labels(base_path=self.base_path, path=self.path).set(
-            time.time() - stat.st_ctime
+            time.time() - stat.st_ctime,
         )
 
 

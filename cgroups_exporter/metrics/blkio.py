@@ -8,6 +8,7 @@ from aiomisc import threaded
 
 from .base import CGroupTask, MetricProviderBase, gauge_factory
 
+
 log = logging.getLogger()
 
 
@@ -68,13 +69,13 @@ class BlockIOBase(MetricProviderBase, ABC):
                     metric_name,
                     self.task.group,
                     self.DOCUMENTATION + " ({!r} field from {!r} file)".format(
-                        metric_name, self.FILENAME
+                        metric_name, self.FILENAME,
                     ),
                     labelnames=("base_path", "path", "device"),
                 )
 
                 metric.labels(
-                    base_path=self.base_path, path=self.path, device=device
+                    base_path=self.base_path, path=self.path, device=device,
                 ).set(value)
 
 

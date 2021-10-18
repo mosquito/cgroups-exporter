@@ -1,6 +1,6 @@
 from aiohttp.web import Application, Request, StreamResponse
 from aiomisc.service.aiohttp import AIOHTTPService
-from prometheus_client import REGISTRY, Metric, CONTENT_TYPE_LATEST
+from prometheus_client import CONTENT_TYPE_LATEST, REGISTRY, Metric
 from prometheus_client.utils import floatToGoString
 
 
@@ -20,8 +20,8 @@ class MetricsAPI(AIOHTTPService):
                             .replace('"', r"\""),
                         )
                         for k, v in sorted(line.labels.items())
-                    ]
-                )
+                    ],
+                ),
             )
         else:
             labelstr = ""
@@ -31,7 +31,7 @@ class MetricsAPI(AIOHTTPService):
             # Convert to milliseconds.
             timestamp = " {0:d}".format(int(float(line.timestamp) * 1000))
         return "{0}{1} {2}{3}\n".format(
-            line.name, labelstr, floatToGoString(line.value), timestamp
+            line.name, labelstr, floatToGoString(line.value), timestamp,
         )
 
     _TYPE_MAPPER = {
@@ -61,7 +61,7 @@ class MetricsAPI(AIOHTTPService):
                 if s.name == metric.name + suffix:
                     # OpenMetrics specific sample, put in a gauge at the end.
                     om_samples.setdefault(suffix, []).append(
-                        self.sample_line(s)
+                        self.sample_line(s),
                     )
                     break
             else:

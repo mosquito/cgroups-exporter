@@ -1,6 +1,6 @@
 import logging
 
-from .base import CGroupTask, UsageBase, LimitBase, StatBase
+from .base import CGroupTask, LimitBase, StatBase, UsageBase
 
 
 log = logging.getLogger()

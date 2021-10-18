@@ -2,6 +2,7 @@ import logging
 
 from .base import CGroupTask, MetricProviderBase, gauge_factory
 
+
 log = logging.getLogger()
 
 
@@ -34,7 +35,7 @@ class CPUSetCount(MetricProviderBase):
             )
 
             metric.labels(base_path=self.base_path, path=self.path).set(
-                len(result)
+                len(result),
             )
 
 
