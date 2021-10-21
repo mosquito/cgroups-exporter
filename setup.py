@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="cgroups-exporter",
-    version="0.4.2",
+    version="0.4.3",
     include_package_data=True,
     license="Apache Software License",
     long_description=open("README.md").read(),
@@ -38,7 +38,7 @@ setup(
         "ConfigArgParse~=1.4",
         "aiochannel~=1.0",
         "aiohttp~=3.7",
-        "aiomisc~=15.1",
+        "aiomisc~=15.2",
         "async-timeout~=3.0",
         "attrs~=21.2",
         "chardet~=4.0",
