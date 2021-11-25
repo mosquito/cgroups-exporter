@@ -37,7 +37,7 @@ setup(
     install_requires=[
         "ConfigArgParse~=1.4",
         "aiochannel~=1.0",
-        "aiohttp~=3.7",
+        "aiohttp~=3.7.4",
         "aiomisc~=15.2",
         "async-timeout~=3.0",
         "attrs~=21.2",
