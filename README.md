@@ -1,16 +1,46 @@
 CGroups exporter
 ================
 
-Exporter for CGroups metrics, for LXD/Docker/systemd.
+Exporter for CGroups metrics, for LXD/Docker/systemd. 
+
+Collects metrics for all cgroups based containers or SystemD services 
+on the host machine, without the need to install separate exporters 
+inside each container.
 
 Installation
 ------------
 
 ```bash
 pip install cgroups-exporter
+```
+
+Example
+-------
+
+A simple example collects all available metrics for LXD containers.
+
+```bash
 cgroups-exporter --cgroups-path "/sys/fs/cgroup/*/lxc.payload.*"
 ```
 
+You can pass several path templates, then metrics will be collected from everyone.
+
+In the example below, metrics will be collected for:
+* All LXD containers
+* All SystemD services running inside the LXD containers
+* All Docker containers inside the LXD containers.
+* All user slices (when used entering through the ssh the 
+  SystemD creates the slice named by template `user-$UID`)
+
+```bash
+cgroups-exporter \
+	--cgroups-path "/sys/fs/cgroup/*/lxc.payload.*/" \
+	--cgroups-path "/sys/fs/cgroup/unified/lxc.payload.*/**/*.service" \
+	--cgroups-path "/sys/fs/cgroup/unified/lxc.payload.*/**/user-*" \
+	--cgroups-path "/sys/fs/cgroup/cpu/lxc.payload.*/**/*.service" \
+	--cgroups-path "/sys/fs/cgroup/unified/**/user.slice/user-*" \
+	--cgroups-path "/sys/fs/cgroup/*/lxc.payload.*/docker/*"
+```
 
 Usage
 -----
