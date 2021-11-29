@@ -3,6 +3,7 @@ from abc import ABC
 from glob import glob
 from pathlib import Path
 from types import MappingProxyType
+from typing import Tuple
 
 from aiomisc import threaded
 
@@ -12,17 +13,26 @@ from .base import CGroupTask, MetricProviderBase, gauge_factory
 log = logging.getLogger()
 
 
-def block_device_ids():
+def block_device_ids() -> Tuple[str, Path]:
     path: Path
     sys_dev_path = Path("/dev")
     base = Path("/sys/block")
     for path in map(Path, glob(str(base / "**/"))):
         dev_path = path / "dev"
+        dm_path = path / "dm" / "name"
+
         if not dev_path.exists():
             continue
 
         with open(dev_path) as fp:
-            yield fp.read().strip(), sys_dev_path / path.relative_to(base)
+            dev_id = fp.read().strip()
+
+        device_path = path.relative_to(base)
+        if dm_path.exists():
+            with open(dm_path) as fp:
+                device_path = sys_dev_path / "mapper" / fp.read().strip()
+
+        yield dev_id, device_path
 
 
 DEVICE_IDS = {}

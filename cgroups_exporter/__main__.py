@@ -2,9 +2,9 @@ import logging
 import os
 
 from aiomisc import entrypoint
-from aiomisc_log import basic_config
 from aiomisc.service import MemoryTracer, Profiler
 from aiomisc.service.sdwatchdog import SDWatchdogService
+from aiomisc_log import basic_config
 
 from cgroups_exporter.args import parser
 from cgroups_exporter.services.collector import Collector
