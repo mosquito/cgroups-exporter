@@ -67,10 +67,10 @@ class Storage:
         with self.lock:
             for metric, records in self.metrics.items():
                 if metric.help:
-                    yield f"# HELP {metric.help}\n"
+                    yield f"# HELP {metric.name} {metric.help}\n"
 
                 if metric.type:
-                    yield f"# TYPE {metric.type}\n"
+                    yield f"# TYPE {metric.name} {metric.type}\n"
 
                 for record, value in records.items():
                     yield "%s{%s} %.3e\n" % (
