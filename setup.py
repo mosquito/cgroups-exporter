@@ -45,8 +45,6 @@ setup(
         "colorlog~=5.0",
         "idna~=3.2",
         "multidict~=5.1",
-        "prometheus-client~=0.10",
-        "typing-extensions==3.10.0.0",
         "yarl~=1.6",
     ],
     entry_points={

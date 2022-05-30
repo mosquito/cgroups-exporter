@@ -2,8 +2,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import NamedTuple
 
-from prometheus_client import Gauge
-from prometheus_client.utils import INF
+from ._metrics import INF, Metric
 
 
 class CGroupTask(NamedTuple):
@@ -58,10 +57,10 @@ class IntProviderBase(MetricProviderBase):
 @lru_cache(2 ** 20)
 def gauge_factory(
     name: str, unit: str, group, documentation: str, labelnames=(),
-) -> Gauge:
-    return Gauge(
+) -> Metric:
+    return Metric(
         name=name,
-        documentation=documentation,
+        help=documentation,
         labelnames=labelnames,
         namespace="cgroups",
         subsystem=group,
