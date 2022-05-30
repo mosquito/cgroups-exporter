@@ -32,3 +32,5 @@ def metrics_handler(task: CGroupTask):
         log.debug("Unhandled metric group %r", task.group)
 
     HANDLER_REGISTRY.get(task.group, log_unhandled)(task)
+
+
