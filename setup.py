@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="cgroups-exporter",
-    version="0.5.2",
+    version="0.5.3",
     include_package_data=True,
     license="Apache Software License",
     long_description=open("README.md").read(),
@@ -13,7 +13,7 @@ setup(
     project_urls={
         "Source": "https://github.com/mosquito/cgroups-exporter/",
         "Tracker": "https://github.com/mosquito/cgroups-exporter/issues",
-        "Say Thanks!": "https://saythanks.io/to/me%40mosquito.su",
+        "Say Thanks!": "https://saythanks.io/to/mosquito",
     },
     packages=find_packages(exclude=["tests"]),
     classifiers=[
@@ -37,15 +37,15 @@ setup(
     install_requires=[
         "ConfigArgParse~=1.4",
         "aiochannel~=1.0",
-        "aiohttp~=3.7.4",
-        "aiomisc~=16.0",
-        "async-timeout~=3.0",
+        "aiohttp~=3.8",
+        "aiomisc~=16.1",
+        "async-timeout~=4.0",
         "attrs~=21.2",
         "chardet~=4.0",
         "colorlog~=5.0",
         "idna~=3.2",
         "multidict~=5.1",
-        "yarl~=1.6",
+        "yarl~=1.7",
     ],
     entry_points={
         "console_scripts": ["cgroups-exporter = cgroups_exporter.__main__:main"]
