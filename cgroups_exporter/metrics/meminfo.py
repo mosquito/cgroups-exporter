@@ -5,12 +5,15 @@ from functools import lru_cache
 from pathlib import Path
 from typing import IO
 
+from aiomisc import threaded
+
 from .base import gauge_factory
 
 
 log = logging.getLogger()
 
 
+@threaded
 def meminfo():
     for collector in COLLECTORS:
         try:

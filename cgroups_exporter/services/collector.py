@@ -35,7 +35,6 @@ class Collector(PeriodicService):
 
     @threaded_iterable_separate(max_size=1024)
     def resolve_paths(self):
-        meminfo()
         for path_glob in self.cgroup_paths:
             for path in glob.glob(path_glob, recursive=True):
 
@@ -73,6 +72,7 @@ class Collector(PeriodicService):
 
     async def callback(self) -> Any:
         log.debug("Starting to collect metrics")
+        await meminfo()
 
         channel = Channel(maxsize=self.max_workers * 2)
         tasks = [self.producer(channel)]
