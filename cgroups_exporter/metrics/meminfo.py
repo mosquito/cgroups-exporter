@@ -46,7 +46,9 @@ class MemInfo:
         for line in fp:
             match = self._METRIC_REGEXP.match(line)
             if match is None:
+                log.debug("Skip line %r", line)
                 continue
+
             parsed = match.groupdict()
             name = parsed.get("name")
             value = parsed.get("value")
