@@ -73,9 +73,12 @@ class Storage:
                     yield f"# TYPE {metric.name} {metric.type}\n"
 
                 for record, value in records.items():
-                    yield "%s{%s} %.3e\n" % (
-                        metric.name, record.labels, value,
-                    )
+                    if record.labels:
+                        yield "%s{%s} %.3e\n" % (
+                            metric.name, record.labels, value,
+                        )
+                    else:
+                        yield "%s %.3e\n" % (metric.name, value)
 
 
 STORAGE = Storage()
