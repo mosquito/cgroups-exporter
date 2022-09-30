@@ -36,7 +36,7 @@ def snake_case(camel_case: str) -> str:
 
 class MemInfo:
     _METRIC_REGEXP = re.compile(
-        r"^(?P<name>[^[\(]]+)(\((?P<label>\S+)\))?:\s*"
+        r"^(?P<name>[^[\(]+)(\((?P<label>\S+)\))?:\s*"
         r"(?P<value>\d+)(\s?(?P<suffix>\S+))?$",
     )
 
