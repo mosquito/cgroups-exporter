@@ -14,6 +14,7 @@ from cgroups_exporter.metrics import (
     HANDLER_REGISTRY, CGroupTask, metrics_handler,
 )
 from cgroups_exporter.metrics.blkio import uptade_device_ids
+from cgroups_exporter.metrics.meminfo import meminfo
 
 
 log = logging.getLogger(__name__)
@@ -29,11 +30,12 @@ class Collector(PeriodicService):
 
     SPLIT_EXP = re.compile(
         r"^(?P<base>.*)/(?P<group>{0})/(?P<path>.*)/?$".format("|".join(groups)),
-                
+
     )
 
     @threaded_iterable_separate(max_size=1024)
     def resolve_paths(self):
+        meminfo()
         for path_glob in self.cgroup_paths:
             for path in glob.glob(path_glob, recursive=True):
 
