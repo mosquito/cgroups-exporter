@@ -48,7 +48,7 @@ class MemInfo:
             name = parsed.get("name")
             value = parsed.get("value")
             label = parsed.get("label")
-            suffix = parsed.get("suffix", "").lower()[:1]
+            suffix = (parsed.get("suffix") or "").lower()[:1]
 
             if not value.isdigit() or suffix not in self.SUFFIXES:
                 continue
@@ -66,17 +66,14 @@ class MemInfo:
 
         with open(meminfo_path, "r") as fp:
             for name, value, label, doc in self.parse_file(fp):
+                args = ("meminfo", name, "host", doc)
                 if label:
-                    gauge_factory(
-                        "meminfo", name, "node", doc, labelnames=("kind",),
-                    ).labels(
+                    gauge_factory(*args, labelnames=("kind",)).labels(
                         kind=label,
                     ).set(value)
 
                 else:
-                    gauge_factory(
-                        "meminfo", name, "node", doc, labelnames=("kind",),
-                    ).labels().set(value)
+                    gauge_factory(*args).labels().set(value)
 
 
 COLLECTORS = (
