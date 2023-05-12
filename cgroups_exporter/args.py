@@ -55,8 +55,8 @@ class Parser(argclass.Parser):
         ),
     )
 
-    metrics = MetricsGroup()
-    cgroups = CgroupGroup()
-    collector = CollectorGroup()
-    profiler = TracerGroup()
-    memory_tracer = TracerGroup()
+    metrics = MetricsGroup(title="Metrics options")
+    cgroups = CgroupGroup(title="CGroups options")
+    collector = CollectorGroup(title="Collector options")
+    profiler = TracerGroup(title="Profiler options")
+    memory_tracer = TracerGroup(title="Memory Tracer options")

@@ -74,6 +74,7 @@ options:
   --log-format {stream,color,json,syslog,plain,journald,rich,rich_tb}
                         (default: color) [ENV: CGROUPS_EXPORTER_LOG_FORMAT]
 
+Metrics options:
   --metrics-address METRICS_ADDRESS
                         (default: ::) [ENV: CGROUPS_EXPORTER_METRICS_ADDRESS]
   --metrics-port METRICS_PORT
@@ -81,24 +82,28 @@ options:
   --metrics-disable-compression
                         [ENV: CGROUPS_EXPORTER_METRICS_DISABLE_COMPRESSION]
 
+CGroups options:
   --cgroups-path CGROUPS_PATH [CGROUPS_PATH ...]
                         [ENV: CGROUPS_EXPORTER_CGROUPS_PATH]
   --cgroups-root CGROUPS_ROOT
                         (default: /sys/fs/cgroup) [ENV: CGROUPS_EXPORTER_CGROUPS_ROOT]
 
+Collector options:
   --collector-interval COLLECTOR_INTERVAL
                         (default: 15) [ENV: CGROUPS_EXPORTER_COLLECTOR_INTERVAL]
   --collector-delay COLLECTOR_DELAY
-                        (default: 2) [ENV: CGROUPS_EXPORTER_COLLECTOR_DELAY]
+                        (default: 4) [ENV: CGROUPS_EXPORTER_COLLECTOR_DELAY]
   --collector-workers COLLECTOR_WORKERS
                         (default: 4) [ENV: CGROUPS_EXPORTER_COLLECTOR_WORKERS]
 
+Profiler options:
   --profiler-enable     [ENV: CGROUPS_EXPORTER_PROFILER_ENABLE]
   --profiler-top-results PROFILER_TOP_RESULTS
                         (default: 20) [ENV: CGROUPS_EXPORTER_PROFILER_TOP_RESULTS]
   --profiler-interval PROFILER_INTERVAL
                         (default: 5) [ENV: CGROUPS_EXPORTER_PROFILER_INTERVAL]
 
+Memory Tracer options:
   --memory-tracer-enable
                         [ENV: CGROUPS_EXPORTER_MEMORY_TRACER_ENABLE]
   --memory-tracer-top-results MEMORY_TRACER_TOP_RESULTS
