@@ -56,6 +56,8 @@ If an arg is specified in more than one place, then commandline values
 override environment variables which override config file values 
 which override defaults.
 
+Environment variable `CGROUPS_EXPORTER_CONFIG` overwrites config file location.
+
 ```
 usage: cgroups-exporter [-h] [-s POOL_SIZE] [-u USER] [--log-level {critical,error,warning,info,debug,notset}] [--log-format {stream,color,json,syslog,plain,journald,rich,rich_tb}] [--metrics-address METRICS_ADDRESS]
                         [--metrics-port METRICS_PORT] [--metrics-disable-compression] --cgroups-path CGROUPS_PATH [CGROUPS_PATH ...] [--cgroups-root CGROUPS_ROOT] [--collector-interval COLLECTOR_INTERVAL]

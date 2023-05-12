@@ -16,7 +16,7 @@ def main():
         auto_env_var_prefix="CGROUPS_EXPORTER_",
         description="croups exporter",
         config_files=[
-            "cgroups-exporter.conf",
+            os.getenv("CGROUPS_EXPORTER_CONFIG", "cgroups-exporter.conf"),
             "~/.cgroups-exporter.conf",
             "/etc/cgroups-exporter.conf",
         ],
