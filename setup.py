@@ -36,7 +36,7 @@ setup(
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: Implementation :: CPython",
     ],
-    python_requires=">=3.8.*, <4",
+    python_requires=">=3.8, <4",
     install_requires=[
         "ConfigArgParse~=1.4",
         "aiochannel~=1.2.1",
@@ -45,7 +45,7 @@ setup(
         "async-timeout~=4.0",
         "attrs~=21.2",
         "chardet~=4.0",
-        "colorlog~=5.0",
+        "colorlog~=6.7",
         "idna~=3.4",
         "multidict~=5.1",
         "yarl~=1.7",
