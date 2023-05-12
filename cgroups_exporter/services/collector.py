@@ -39,7 +39,7 @@ class Collector(PeriodicService):
             for path in glob.glob(path_glob, recursive=True):
 
                 if not os.path.isdir(path):
-                    #log.debug("Is not directory path %r skipping...", path)
+                    log.debug("Is not directory path %r skipping...", path)
                     continue
 
                 log.debug("Processing path %s", path)

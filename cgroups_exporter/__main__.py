@@ -6,48 +6,59 @@ from aiomisc.service import MemoryTracer, Profiler
 from aiomisc.service.sdwatchdog import SDWatchdogService
 from aiomisc_log import basic_config
 
-from cgroups_exporter.args import parser
+from cgroups_exporter.args import Parser
 from cgroups_exporter.services.collector import Collector
 from cgroups_exporter.services.metrics import MetricsAPI
 
 
 def main():
+    parser: Parser = Parser(
+        auto_env_var_prefix="CGROUPS_EXPORTER_",
+        description="croups exporter",
+        config_files=[
+            "cgroups-exporter.conf",
+            "~/.cgroups-exporter.conf",
+            "/etc/cgroups-exporter.conf",
+        ],
+    )
+
     arguments = parser.parse_args()
 
     log_config = dict(
-        log_level=arguments.log_level,
-        log_format=arguments.log_format,
+        log_level=arguments.log.level,
+        log_format=arguments.log.format,
     )
 
     basic_config(**log_config)
 
     services = [
         MetricsAPI(
-            address=arguments.metrics_address, port=arguments.metrics_port,
-            compression=not arguments.metrics_disable_compression,
+            address=arguments.metrics.address, port=arguments.metrics.port,
+            compression=not arguments.metrics.disable_compression,
         ),
         Collector(
-            interval=arguments.collector_interval,
-            delay=arguments.collector_delay,
-            cgroup_paths=arguments.cgroups_path,
-            max_workers=arguments.collector_workers,
+            interval=arguments.collector.interval,
+            delay=arguments.collector.delay,
+            cgroup_paths=arguments.cgroups.path,
+            cgroup_root=arguments.cgroups.root,
+            max_workers=arguments.collector.workers,
         ),
         SDWatchdogService(),
     ]
 
-    if arguments.profiler:
+    if arguments.profiler.enable:
         services.append(
             Profiler(
-                interval=arguments.profiler_interval,
-                top_results=arguments.profiler_top_results,
+                interval=arguments.profiler.interval,
+                top_results=arguments.profiler.top_results,
             ),
         )
 
-    if arguments.memory_tracer:
+    if arguments.memory_tracer.enable:
         services.append(
             MemoryTracer(
-                interval=arguments.memory_tracer_interval,
-                top_results=arguments.memory_tracer_top_results,
+                interval=arguments.memory_tracer.interval,
+                top_results=arguments.memory_tracer.top_results,
             ),
         )
 
