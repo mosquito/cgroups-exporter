@@ -1,72 +1,62 @@
-import argparse
-import os
 import pwd
+from pathlib import Path
 from random import randint
+from typing import Iterable
 
+import argclass
 from aiomisc.log import LogFormat
 from aiomisc_log import LogLevel
-from configargparse import ArgumentParser
 
 
-parser = ArgumentParser(
-    allow_abbrev=False,
-    auto_env_var_prefix="CGROUPS_EXPORTER_",
-    description="croups exporter",
-    default_config_files=[
-        os.path.join(os.path.expanduser("~"), ".cgroups-exporter.conf"),
-        "/etc/cgroups-exporter.conf",
-    ],
-    formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-    ignore_unknown_config_file_keys=True,
-)
+class LogGroup(argclass.Group):
+    level: str = argclass.Argument(choices=LogLevel.choices())
+    format: str = argclass.Argument(choices=LogFormat.choices())
 
-parser.add_argument(
-    "-s", "--pool-size", type=int, default=2, help="Thread pool size",
-)
 
-parser.add_argument(
-    "-u", "--user", required=False, help="Change process UID", type=pwd.getpwnam,
-)
+class MetricsGroup(argclass.Group):
+    address: str = "::"
+    port: int = 9753
+    disable_compression: bool = False
 
-group = parser.add_argument_group("Logging options")
-group.add_argument(
-    "--log-level",
-    default=LogLevel.default(),
-    choices=LogLevel.choices(),
-)
-group.add_argument(
-    "--log-format", default=LogFormat.default(),
-    choices=LogFormat.choices(),
-)
 
-group = parser.add_argument_group("Metrics API options")
-group.add_argument("--metrics-address", default="::")
-group.add_argument("--metrics-port", type=int, default=9735)
-group.add_argument("--metrics-disable-compression", action="store_true")
+class CgroupGroup(argclass.Group):
+    path: Iterable[str] = argclass.Argument(
+        nargs=argclass.Nargs.ONE_OR_MORE, required=True,
+    )
+    root: Path = Path("/sys/fs/cgroup")
 
-group = parser.add_argument_group("Cgroups options")
-group.add_argument("--cgroups-path", nargs="+", required=True)
-group.add_argument("--collector-interval", type=float, default=15.0)
-group.add_argument(
-    "--collector-delay", type=float, default=float(randint(1, 5)),
-)
-group.add_argument("--collector-workers", type=int, default=4)
 
-group = parser.add_argument_group("Profiler settings")
-group.add_argument("--profiler", action="store_true")
-group.add_argument("--profiler-interval", type=int, required=False, default=5)
-group.add_argument(
-    "--profiler-top-results",
-    type=int,
-    required=False,
-    default=20,
-)
+class CollectorGroup(argclass.Group):
+    interval: int = 15
+    delay: int = randint(1, 5)
+    workers: int = 4
 
-group = parser.add_argument_group("Memory tracer settings")
-group.add_argument("--memory-tracer", action="store_true")
-group.add_argument(
-    "--memory-tracer-interval", type=int, required=False, default=5,
-)
-group.add_argument(
-    "--memory-tracer-top-results", type=int, required=False, default=20,
-)
+
+class TracerGroup(argclass.Group):
+    enable: bool = False
+    top_results: int = 20
+    interval: int = 5
+
+
+class Parser(argclass.Parser):
+    pool_size: int = argclass.Argument(
+        "-s", default=4,
+        help="Thread pool size",
+    )
+    user: pwd.struct_passwd = argclass.Argument(
+        "-u", required=False,
+        help="Change process UID",
+        type=pwd.getpwnam,
+    )
+    log = LogGroup(
+        defaults=dict(
+            level=LogLevel.default(),
+            format=LogFormat.default(),
+        ),
+    )
+
+    metrics = MetricsGroup(title="Metrics options")
+    cgroups = CgroupGroup(title="CGroups options")
+    collector = CollectorGroup(title="Collector options")
+    profiler = TracerGroup(title="Profiler options")
+    memory_tracer = TracerGroup(title="Memory Tracer options")

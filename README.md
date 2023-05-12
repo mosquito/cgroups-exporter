@@ -34,12 +34,13 @@ In the example below, metrics will be collected for:
 
 ```bash
 cgroups-exporter \
-	--cgroups-path "/sys/fs/cgroup/*/lxc.payload.*/" \
-	--cgroups-path "/sys/fs/cgroup/unified/lxc.payload.*/**/*.service" \
-	--cgroups-path "/sys/fs/cgroup/unified/lxc.payload.*/**/user-*" \
-	--cgroups-path "/sys/fs/cgroup/cpu/lxc.payload.*/**/*.service" \
-	--cgroups-path "/sys/fs/cgroup/unified/**/user.slice/user-*" \
-	--cgroups-path "/sys/fs/cgroup/*/lxc.payload.*/docker/*"
+  --cgroups-path \
+      "/sys/fs/cgroup/*/lxc.payload.*/" \
+      "/sys/fs/cgroup/unified/lxc.payload.*/**/*.service" \
+      "/sys/fs/cgroup/unified/lxc.payload.*/**/user-*" \
+      "/sys/fs/cgroup/cpu/lxc.payload.*/**/*.service" \
+      "/sys/fs/cgroup/unified/**/user.slice/user-*" \
+      "/sys/fs/cgroup/*/lxc.payload.*/docker/*"
 ```
 
 Usage
@@ -55,67 +56,65 @@ If an arg is specified in more than one place, then commandline values
 override environment variables which override config file values 
 which override defaults.
 
+Environment variable `CGROUPS_EXPORTER_CONFIG` overwrites config file location.
+
 ```
-usage: cgroups-exporter [-h]
-                        [-s POOL_SIZE]
-                        [-u USER]
-                        [--log-level {debug,info,warning,error,fatal}]
-                        [--log-format {stream,color,json,syslog}]
-                        [--metrics-address METRICS_ADDRESS]
-                        [--metrics-port METRICS_PORT]
-                        --cgroups-path CGROUPS_PATH [CGROUPS_PATH ...]
-                        [--collector-interval COLLECTOR_INTERVAL]
-                        [--collector-delay COLLECTOR_DELAY]
-                        [--collector-workers COLLECTOR_WORKERS]
-                        [--profiler]
-                        [--profiler-interval PROFILER_INTERVAL]
-                        [--profiler-top-results PROFILER_TOP_RESULTS]
-                        [--memory-tracer]
-                        [--memory-tracer-interval MEMORY_TRACER_INTERVAL]
-                        [--memory-tracer-top-results MEMORY_TRACER_TOP_RESULTS]
+usage: cgroups-exporter [-h] [-s POOL_SIZE] [-u USER] [--log-level {critical,error,warning,info,debug,notset}] [--log-format {stream,color,json,syslog,plain,journald,rich,rich_tb}] [--metrics-address METRICS_ADDRESS]
+                        [--metrics-port METRICS_PORT] [--metrics-disable-compression] --cgroups-path CGROUPS_PATH [CGROUPS_PATH ...] [--cgroups-root CGROUPS_ROOT] [--collector-interval COLLECTOR_INTERVAL]
+                        [--collector-delay COLLECTOR_DELAY] [--collector-workers COLLECTOR_WORKERS] [--profiler-enable] [--profiler-top-results PROFILER_TOP_RESULTS] [--profiler-interval PROFILER_INTERVAL] [--memory-tracer-enable]
+                        [--memory-tracer-top-results MEMORY_TRACER_TOP_RESULTS] [--memory-tracer-interval MEMORY_TRACER_INTERVAL]
 
-optional arguments:
+croups exporter
 
+options:
   -h, --help            show this help message and exit
-  -s POOL_SIZE, --pool-size POOL_SIZE
-                        Thread pool size [env var: CGROUPS_EXPORTER_POOL_SIZE] (default: 4)
-  -u USER, --user USER  Change process UID [env var: CGROUPS_EXPORTER_USER] (default: None)
+  -s POOL_SIZE          Thread pool size (default: 4) [ENV: CGROUPS_EXPORTER_POOL_SIZE]
+  -u USER               Change process UID [ENV: CGROUPS_EXPORTER_USER]
 
-Logging options:
-  --log-level {debug,info,warning,error,fatal}
-                        [env var: CGROUPS_EXPORTER_LOG_LEVEL] (default: info)
-  --log-format {stream,color,json,syslog}
-                        [env var: CGROUPS_EXPORTER_LOG_FORMAT] (default: color)
+  --log-level {critical,error,warning,info,debug,notset}
+                        (default: info) [ENV: CGROUPS_EXPORTER_LOG_LEVEL]
+  --log-format {stream,color,json,syslog,plain,journald,rich,rich_tb}
+                        (default: color) [ENV: CGROUPS_EXPORTER_LOG_FORMAT]
 
-Metrics API options:
+Metrics options:
   --metrics-address METRICS_ADDRESS
-                        [env var: CGROUPS_EXPORTER_METRICS_ADDRESS] (default: ::)
+                        (default: ::) [ENV: CGROUPS_EXPORTER_METRICS_ADDRESS]
   --metrics-port METRICS_PORT
-                        [env var: CGROUPS_EXPORTER_METRICS_PORT] (default: 9735)
+                        (default: 9753) [ENV: CGROUPS_EXPORTER_METRICS_PORT]
+  --metrics-disable-compression
+                        [ENV: CGROUPS_EXPORTER_METRICS_DISABLE_COMPRESSION]
 
-Cgroups options:
+CGroups options:
   --cgroups-path CGROUPS_PATH [CGROUPS_PATH ...]
-                        [env var: CGROUPS_EXPORTER_CGROUPS_PATH] (default: None)
+                        [ENV: CGROUPS_EXPORTER_CGROUPS_PATH]
+  --cgroups-root CGROUPS_ROOT
+                        (default: /sys/fs/cgroup) [ENV: CGROUPS_EXPORTER_CGROUPS_ROOT]
+
+Collector options:
   --collector-interval COLLECTOR_INTERVAL
-                        [env var: CGROUPS_EXPORTER_COLLECTOR_INTERVAL] (default: 15.0)
+                        (default: 15) [ENV: CGROUPS_EXPORTER_COLLECTOR_INTERVAL]
   --collector-delay COLLECTOR_DELAY
-                        [env var: CGROUPS_EXPORTER_COLLECTOR_DELAY] (default: 2.0)
+                        (default: 4) [ENV: CGROUPS_EXPORTER_COLLECTOR_DELAY]
   --collector-workers COLLECTOR_WORKERS
-                        [env var: CGROUPS_EXPORTER_COLLECTOR_WORKERS] (default: 4)
+                        (default: 4) [ENV: CGROUPS_EXPORTER_COLLECTOR_WORKERS]
 
-Profiler settings:
-  --profiler            [env var: CGROUPS_EXPORTER_PROFILER] (default: False)
-  --profiler-interval PROFILER_INTERVAL
-                        [env var: CGROUPS_EXPORTER_PROFILER_INTERVAL] (default: 5)
+Profiler options:
+  --profiler-enable     [ENV: CGROUPS_EXPORTER_PROFILER_ENABLE]
   --profiler-top-results PROFILER_TOP_RESULTS
-                        [env var: CGROUPS_EXPORTER_PROFILER_TOP_RESULTS] (default: 20)
+                        (default: 20) [ENV: CGROUPS_EXPORTER_PROFILER_TOP_RESULTS]
+  --profiler-interval PROFILER_INTERVAL
+                        (default: 5) [ENV: CGROUPS_EXPORTER_PROFILER_INTERVAL]
 
-Memory tracer settings:
-  --memory-tracer       [env var: CGROUPS_EXPORTER_MEMORY_TRACER] (default: False)
-  --memory-tracer-interval MEMORY_TRACER_INTERVAL
-                        [env var: CGROUPS_EXPORTER_MEMORY_TRACER_INTERVAL] (default: 5)
+Memory Tracer options:
+  --memory-tracer-enable
+                        [ENV: CGROUPS_EXPORTER_MEMORY_TRACER_ENABLE]
   --memory-tracer-top-results MEMORY_TRACER_TOP_RESULTS
-                        [env var: CGROUPS_EXPORTER_MEMORY_TRACER_TOP_RESULTS] (default: 20)
+                        (default: 20) [ENV: CGROUPS_EXPORTER_MEMORY_TRACER_TOP_RESULTS]
+  --memory-tracer-interval MEMORY_TRACER_INTERVAL
+                        (default: 5) [ENV: CGROUPS_EXPORTER_MEMORY_TRACER_INTERVAL]
+
+Default values will based on following configuration files ['cgroups-exporter.conf', '~/.cgroups-exporter.conf', '/etc/cgroups-exporter.conf']. The configuration files is INI-formatted files where configuration groups is INI
+sections.See more https://pypi.org/project/argclass/#configs
 ```
 
 Metrics

@@ -1,0 +1,48 @@
+[tool.poetry]
+name = "cgroups-exporter"
+version = "0.7.0"
+description = "prometheus exporter for cgroups v1"
+authors = ["Dmitry Orlov <me@mosquito.su>"]
+readme = "README.md"
+license = "Apache Software License"
+homepage = "https://github.com/mosquito/cgroups-exporter"
+classifiers = [
+    "License :: OSI Approved :: Apache Software License",
+    "Topic :: Software Development",
+    "Topic :: Software Development :: Libraries",
+    "Intended Audience :: Developers",
+    "Natural Language :: English",
+    "Operating System :: MacOS",
+    "Operating System :: POSIX",
+    "Operating System :: Microsoft",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: Implementation :: CPython",
+]
+packages = [
+    { include = "cgroups_exporter" },
+]
+
+[tool.poetry.urls]
+"Source" = "https://github.com/mosquito/cgroups-exporter/"
+"Tracker" = "https://github.com/mosquito/cgroups-exporter/issues"
+"Say Thanks!" = "https://saythanks.io/to/mosquito"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+argclass = "^0.9.2"
+aiochannel = "^1.2.1"
+aiohttp = "3.8.1"
+aiomisc = "^17.2.2"
+
+
+[tool.poetry.scripts]
+"cgroups-exporter" = "cgroups_exporter.__main__:main"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
