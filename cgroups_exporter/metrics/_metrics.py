@@ -65,20 +65,23 @@ class Storage:
 
     def __iter__(self):
         with self.lock:
-            for metric, records in self.metrics.items():
-                if metric.help:
-                    yield f"# HELP {metric.name} {metric.help}\n"
+            # make a copy of metrics to avoid slow tcp attack
+            metrics = tuple(self.metrics.items())
 
-                if metric.type:
-                    yield f"# TYPE {metric.name} {metric.type}\n"
+        for metric, records in metrics:
+            if metric.help:
+                yield f"# HELP {metric.name} {metric.help}\n"
 
-                for record, value in records.items():
-                    if record.labels:
-                        yield "%s{%s} %.3e\n" % (
-                            metric.name, record.labels, value,
-                        )
-                    else:
-                        yield "%s %.3e\n" % (metric.name, value)
+            if metric.type:
+                yield f"# TYPE {metric.name} {metric.type}\n"
+
+            for record, value in records.items():
+                if record.labels:
+                    yield "%s{%s} %.3e\n" % (
+                        metric.name, record.labels, value,
+                    )
+                else:
+                    yield "%s %.3e\n" % (metric.name, value)
 
 
 STORAGE = Storage()
