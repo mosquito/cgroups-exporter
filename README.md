@@ -117,6 +117,18 @@ Default values will based on following configuration files ['cgroups-exporter.co
 sections.See more https://pypi.org/project/argclass/#configs
 ```
 
+Container Usage
+---------------
+
+`cgroups-exporter` is also available as a container image to be used in Docker, Kubernetes or other runtimes. It expects the host `/sys` directory to be mounted in the container (read only).
+
+Docker usage example:
+
+```shell
+docker run -p 9753:9753 -v /sys/:/host_sys/ ghcr.io/mosquito/cgroups-exporter:latest cgroups-exporter --cgroups-path "/host_sys/fs/cgroup/*/docker/*"
+```
+
+
 Metrics
 -------
 
