@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cgroups-exporter"
-version = "0.7.0"
+version = "0.8.0"
 description = "prometheus exporter for cgroups v1"
 authors = ["Dmitry Orlov <me@mosquito.su>"]
 readme = "README.md"
