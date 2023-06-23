@@ -1,6 +1,6 @@
 from functools import lru_cache
 from pathlib import Path
-from typing import NamedTuple
+from typing import NamedTuple, Optional
 
 from ._metrics import INF, Metric
 
@@ -54,17 +54,23 @@ class IntProviderBase(MetricProviderBase):
         metric.labels(base_path=self.base_path, path=self.path).set(value)
 
 
+def _normalize_name(name: Optional[str]) -> Optional[str]:
+    if name is None:
+        return None
+    return name.replace(".", "_")
+
+
 @lru_cache(2 ** 20)
 def gauge_factory(
     name: str, unit: str, group, documentation: str, labelnames=(),
 ) -> Metric:
     return Metric(
-        name=name,
+        name=_normalize_name(name),
         help=documentation,
         labelnames=labelnames,
         namespace="cgroups",
-        subsystem=group,
-        unit=unit.replace(".", "_"),
+        subsystem=_normalize_name(group),
+        unit=_normalize_name(unit),
     )
 
 
