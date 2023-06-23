@@ -16,7 +16,9 @@ class MetricBase:
         self, *, name: str, labelnames: Iterable[str], help: str = None,
         type: str = "gauge", namespace: str, subsystem: str, unit: str,
     ):
-        self.name = "_".join(filter(None, (namespace, subsystem, name, unit)))
+        self.name = "_".join(
+            filter(None, (namespace, subsystem, name, unit))
+        ).replace(".", "_")
         self.help = help
         self.type = type
         self.label_names = frozenset(labelnames)

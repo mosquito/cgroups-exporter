@@ -54,23 +54,17 @@ class IntProviderBase(MetricProviderBase):
         metric.labels(base_path=self.base_path, path=self.path).set(value)
 
 
-def _normalize_name(name: Optional[str]) -> Optional[str]:
-    if name is None:
-        return None
-    return name.replace(".", "_")
-
-
 @lru_cache(2 ** 20)
 def gauge_factory(
     name: str, unit: str, group, documentation: str, labelnames=(),
 ) -> Metric:
     return Metric(
-        name=_normalize_name(name),
+        name=name,
         help=documentation,
         labelnames=labelnames,
         namespace="cgroups",
-        subsystem=_normalize_name(group),
-        unit=_normalize_name(unit),
+        subsystem=group,
+        unit=unit,
     )
 
 
