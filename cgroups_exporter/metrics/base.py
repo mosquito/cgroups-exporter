@@ -64,7 +64,7 @@ def gauge_factory(
         labelnames=labelnames,
         namespace="cgroups",
         subsystem=group,
-        unit=unit,
+        unit=unit.replace(".", "_"),
     )
 
 
