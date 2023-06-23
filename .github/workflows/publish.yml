@@ -47,6 +47,9 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Building wheel
+        run: poetry build -f wheel
+
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v3
         with:
@@ -58,6 +61,6 @@ jobs:
             ghcr.io/${{ github.repository }}:latest
 
       - name: Publishing to pypi
-        run: poetry publish --build
+        run: poetry publish
         env:
           POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_TOKEN }}
