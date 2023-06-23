@@ -32,22 +32,6 @@ jobs:
         env:
           POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_TOKEN }}
 
-  image:
-
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          submodules: recursive
-
-      - name: Read Poetry TOML
-        uses: SebRollen/toml-action@v1.0.2
-        id: read_toml
-        with:
-          file: 'pyproject.toml'
-          field: 'tool.poetry.version'
-
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
 
