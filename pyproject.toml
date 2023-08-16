@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cgroups-exporter"
-version = "0.8.6"
+version = "0.8.7"
 description = "prometheus exporter for cgroups v1"
 authors = ["Dmitry Orlov <me@mosquito.su>"]
 readme = "README.md"
@@ -17,10 +17,10 @@ classifiers = [
     "Operating System :: Microsoft",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: Implementation :: CPython",
 ]
 packages = [
@@ -34,10 +34,10 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "^3.8"
-argclass = "^0.9.2"
+argclass = "^0.11.0"
 aiochannel = "^1.2.1"
-aiohttp = "3.8.1"
-aiomisc = "^17.2.2"
+aiohttp = "3.8.5"
+aiomisc = "^17.3"
 
 
 [tool.poetry.scripts]
