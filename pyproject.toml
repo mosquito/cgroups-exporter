@@ -34,10 +34,10 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "^3.8"
-argclass = "^0.11.0"
+argclass = "^1.0"
 aiochannel = "^1.2.1"
-aiohttp = "3.8.5"
-aiomisc = "^17.3"
+aiohttp = "3.9.0"
+aiomisc = "^17.5"
 
 
 [tool.poetry.scripts]
